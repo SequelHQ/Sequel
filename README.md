@@ -53,3 +53,7 @@ npm electron
 ## Contributing to Sequel
 
 Sequel thrives on the vibrant contributions of our community. We encourage you to contribute, whether it's through adding new features, fixing bugs, or enhancing our documentation. Your efforts help make Sequel a more powerful tool for everyone.
+
+License
+
+Sequel is proudly open source, licensed under the MIT License. You are free to use, modify, and distribute the software in accordance with the license terms.
