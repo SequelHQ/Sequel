@@ -29,18 +29,18 @@ cd sequel
 
 4. Install the project dependencies:
 ```sh
-npm install
+bun install
 ```
 
 5. Start the development server:
 ```sh
-npm devstart
+bun run devstart
 ```
 
 
 6. Start the electron app:
 ```sh
-npm electron
+bun run electron
 ```
 
 
@@ -54,6 +54,6 @@ npm electron
 
 Sequel thrives on the vibrant contributions of our community. We encourage you to contribute, whether it's through adding new features, fixing bugs, or enhancing our documentation. Your efforts help make Sequel a more powerful tool for everyone.
 
-License
+## License
 
 Sequel is proudly open source, licensed under the MIT License. You are free to use, modify, and distribute the software in accordance with the license terms.
