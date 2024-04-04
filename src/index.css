@@ -1,0 +1,125 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add your custom styles here */
+
+/* * {
+  font-family: "Outfit", sans-serif !important;
+  font-family: "Inter", sans-serif !important;
+} */
+
+@font-face {
+  font-family: Satoshi;
+  src: url("/public/fonts/Satoshi-Light.otf") format("opentype");
+  font-weight: 100;
+}
+@font-face {
+  font-family: Satoshi;
+  src: url("/public/fonts/Satoshi-Regular.otf") format("opentype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Satoshi;
+  src: url("/public/fonts/Satoshi-Medium.otf") format("opentype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: Satoshi;
+  src: url("/public/fonts/Satoshi-Bold.otf") format("opentype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: Satoshi;
+  src: url("/public/fonts/Satoshi-Black.otf") format("opentype");
+  font-weight: 900;
+}
+
+body {
+  margin: 0px;
+  overflow: auto;
+  height: 100% !important;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+.titlebar {
+  -webkit-app-region: drag !important;
+  -webkit-user-select: none !important;
+}
+.controls {
+  -webkit-app-region: no-drag !important;
+}
+/* @font-face {
+  font-family: "Outfit";
+  src: local("Outfit"),
+    url(./assets/fonts/Outfit-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Outfit";
+  font-weight: 500;
+  src: local("Outfit"), url(./assets/fonts/Outfit-Medium.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Outfit";
+  font-weight: 600;
+  src: local("Outfit"),
+    url(./assets/fonts/Outfit-SemiBold.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Outfit";
+  font-weight: 700;
+  src: local("Outfit"), url(./assets/fonts/Outfit-Bold.ttf) format("truetype");
+} */
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #cacaca;
+  border-radius: 12px;
+}
+
+@keyframes zoom-in-zoom-out {
+  0% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.5, 1.5);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
