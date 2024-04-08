@@ -1,0 +1,7 @@
+src/components/chat/katex-dist/
+src/components/ui/
+tailwind.config.js
+forge.config.js
+public/
+src/App.js
+publish/

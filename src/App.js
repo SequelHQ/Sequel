@@ -15,40 +15,40 @@ import Videos from "./modules/videos/Videos";
 import Tests from "./modules/tests/Tests";
 
 const initAiConfig = () => {
-  if (!getSelectedAIConfiguration()) {
-    localStorage.setItem("selectedAIConfiguration", "sequelsOpenAI");
-    localStorage.setItem("AIKey", process.env.OPEN_AI_KEY);
-  }
+	if (!getSelectedAIConfiguration()) {
+		localStorage.setItem("selectedAIConfiguration", "sequelsOpenAI");
+		localStorage.setItem("AIKey", process.env.OPEN_AI_KEY);
+	}
 };
 
 function App() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    navigate("/sheets");
-    initAiConfig();
-  }, []);
+	const navigate = useNavigate();
+	useEffect(() => {
+		navigate("/sheets");
+		initAiConfig();
+	}, []);
 
-  return (
-    <>
-      <AppTitlebar />
-      <div className="App flex flex-col px-4 pt-10 h-[100vh] bg-[rgba(0,0,0,0.24)] noDrag font-satoshi">
-        <Routes>
-          <Route element={<PageLayout />}>
-            <Route path="/sheets" element={<Labs />} />
-            <Route path="/whoop" element={<Whoop />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/journal" element={<Journal />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/supplements" element={<Supplements />} />
-            <Route path="/therapies" element={<Therapies />} />
-            <Route path="/videos" element={<Videos />} />
-            <Route path="/tests" element={<Tests />} />
-          </Route>
-        </Routes>
-        <Toaster />
-      </div>
-    </>
-  );
+	return (
+		<>
+			<AppTitlebar />
+			<div className="App flex flex-col px-4 pt-10 h-[100vh] bg-[rgba(0,0,0,0.24)] noDrag font-satoshi">
+				<Routes>
+					<Route element={<PageLayout />}>
+						<Route path="/sheets" element={<Labs />} />
+						<Route path="/whoop" element={<Whoop />} />
+						<Route path="/settings" element={<Settings />} />
+						<Route path="/journal" element={<Journal />} />
+						<Route path="/chat" element={<Chat />} />
+						<Route path="/supplements" element={<Supplements />} />
+						<Route path="/therapies" element={<Therapies />} />
+						<Route path="/videos" element={<Videos />} />
+						<Route path="/tests" element={<Tests />} />
+					</Route>
+				</Routes>
+				<Toaster />
+			</div>
+		</>
+	);
 }
 
 export default App;

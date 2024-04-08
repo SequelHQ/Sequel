@@ -1,6 +1,6 @@
 {
   "name": "sequel",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "productName": "Sequel",
   "private": true,
   "author": "Sequel",
@@ -68,7 +68,8 @@
     "electron:package:win": "yarn build && electron-builder -w -c.extraMetadata.main=build/electron.js",
     "electron:package:linux": "yarn build && electron-builder -l -c.extraMetadata.main=build/electron.js",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "format": "eslint --fix ."
   },
   "eslintConfig": {
     "extends": [
