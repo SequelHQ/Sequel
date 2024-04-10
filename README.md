@@ -26,11 +26,17 @@ cd sequel
 ```
 
 3. Add the .env file to the root of the project (see .env.example)
+   - If you are using Whoop, please make sure to update the redirect URIs in your developer portal:
+    ```sh
+        sequel://app-view?module=whoop, http://localhost:3000
+    ```
+
 
 4. Install the project dependencies:
 ```sh
 bun install
 ```
+
 
 5. Start the development server:
 ```sh
