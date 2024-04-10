@@ -170,24 +170,64 @@ const Chat = () => {
 		} catch (e) {
 			console.error(e);
 		}
-		const allData = JSON.stringify({
-			files: getFiles(),
-			therapies: JSON.parse(localStorage.getItem("therapiesList") ?? "")?.map(
+	
+		//@ts-ignore
+		let files = [];
+		let therapies = [];
+		let tests = [];
+		let supplements = [];
+		let journal = '';
+	
+		try {
+			files = getFiles();
+		} catch (e) {
+			console.error(e);
+		}
+	
+		try {
+			therapies = JSON.parse(localStorage.getItem("therapiesList") ?? "")?.map(
 				(therapy: TherapyItem) => {
 					return `${therapy.label} - In progress: ${therapy.inProgress}`;
 				}
-			),
-			tests: JSON.parse(localStorage.getItem("testsList") ?? "")?.map(
+			);
+		} catch (e) {
+			console.error(e);
+		}
+	
+		try {
+			tests = JSON.parse(localStorage.getItem("testsList") ?? "")?.map(
 				(test: TestType) => {
 					return `${test.test_name} - Ordered: ${test.ordered} - Taken ${test.taken}`;
 				}
-			),
-			supplements: JSON.parse(
+			);
+		} catch (e) {
+			console.error(e);
+		}
+	
+		try {
+			supplements = JSON.parse(
 				localStorage.getItem("supplementsList") ?? ""
 			)?.map((supplement: SupplementType) => {
 				return `${supplement.supplement} - ID: ${supplement.id} - Ordered: ${supplement.ordered} - Dosage ${supplement.dosage}`;
-			}),
-			journal: getJournalData(),
+			});
+		} catch (e) {
+			console.error(e);
+		}
+	
+		try {
+			journal = getJournalData();
+		} catch (e) {
+			console.error(e);
+		}
+	
+		
+		const allData = JSON.stringify({
+			//@ts-ignore
+			files: files,
+			therapies: therapies,
+			tests: tests,
+			supplements: supplements,
+			journal: journal,
 			whoop: whoopData,
 		});
 		try {
