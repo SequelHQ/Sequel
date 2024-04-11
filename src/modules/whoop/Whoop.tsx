@@ -66,8 +66,8 @@ const Whoop = () => {
 	}, []);
 
 	const getFreshWhoopTokens = async () => {
-		const clientId = process.env.WHOOP_CLIENT_ID;
-		const clientSecret = process.env.WHOOP_CLIENT_SECRET;
+		const clientId = process.env.REACT_APP_WHOOP_CLIENT_ID;
+		const clientSecret = process.env.REACT_APP_WHOOP_CLIENT_SECRET;
 		const refreshToken = getWhoopRefreshToken();
 
 		if (!refreshToken) return;

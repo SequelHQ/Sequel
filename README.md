@@ -49,6 +49,10 @@ bun run devstart
 bun run electron
 ```
 
+7. (Optional) Select your Chat model
+- Before using the Chat module, go to Settings by clicking on the top left gear icon
+- In settings, select the model and press save to make sure your API key is loaded & pointed to the right model
+
 
 ## Key Features
 

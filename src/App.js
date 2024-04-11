@@ -17,7 +17,7 @@ import Tests from "./modules/tests/Tests";
 const initAiConfig = () => {
 	if (!getSelectedAIConfiguration()) {
 		localStorage.setItem("selectedAIConfiguration", "sequelsOpenAI");
-		localStorage.setItem("AIKey", process.env.OPEN_AI_KEY);
+		localStorage.setItem("AIKey", process.env.REACT_APP_OPENAI_API_KEY);
 	}
 };
 

@@ -109,7 +109,7 @@ app.on("window-all-closed", function () {
 });
 
 async function authenticateWithWhoop() {
-	const clientId = process.env.WHOOP_CLIENT_ID;
+	const clientId = process.env.REACT_APP_WHOOP_CLIENT_ID;
 	const redirectUri = "sequel://app-view?module=whoop";
 	const responseType = "code";
 
@@ -173,8 +173,8 @@ async function authenticateWithWhoop() {
 }
 
 async function exchangeCodeForToken(code) {
-	const clientId = process.env.WHOOP_CLIENT_ID;
-	const clientSecret = process.env.WHOOP_CLIENT_SECRET;
+	const clientId = process.env.REACT_APP_WHOOP_CLIENT_ID;
+	const clientSecret = process.env.REACT_APP_WHOOP_CLIENT_SECRET;
 	const redirectUri = "sequel://app-view?module=whoop";
 
 	try {

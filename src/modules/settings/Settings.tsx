@@ -36,7 +36,7 @@ const Settings = () => {
 			key = apiKey;
 		} else {
 			key =
-        selectedOption === "sequelsOpenAI" ? (process.env.OPEN_AI_KEY as string) : process.env.GROQ_API_KEY ?? "";
+        selectedOption === "sequelsOpenAI" ? (process.env.REACT_APP_OPENAI_API_KEY as string) : process.env.REACT_APP_GROQ_API_KEY ?? "";
 		}
 		localStorage.setItem("AIKey", key as string);
 		removeExistingThread();
