@@ -6,8 +6,8 @@ import * as PDFJS from "pdfjs-dist";
 import * as pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs";
 import FileTag from "src/components/chat/FileTag";
 import { SkeletonFileTag } from "src/components/SkeletonFileTag";
-import { ModuleContainer } from "src/components/Containers";
-
+import toast from "react-hot-toast";
+import { FileType } from "src/helpers/types/file.types";
 PDFJS.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const extractTextFromPDFBase64 = async (base64String: string) => {
@@ -32,25 +32,29 @@ const extractTextFromPDFBase64 = async (base64String: string) => {
 };
 
 const Labs = () => {
-	const [files, setFiles] = useState<
-    {
-      name: string;
-      content: string;
-      createdDate: number;
-    }[]
-  >(getFiles());
+	const [files, setFiles] = useState<FileType[]>(getFiles());
 	const [isDragging, setIsDragging] = useState(false);
 	const [loading, setLoading] = useState(false);
-
+  
 	const uploadFiles = async (filesToUpload: File[]) => {
 		setLoading(true);
 		const uploadPromises = filesToUpload.map(async (file) => {
 			const file_b64: any = await toBase64(file);
-			const fileContent = await extractTextFromPDFBase64(file_b64);
+			let fileContent = "";
+      
+			if (file.type === "application/pdf") {
+				fileContent = await extractTextFromPDFBase64(file_b64);
+			} else if (file.type === "text/plain" || file.type === "text/html" || file.type === "application/json" || file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+				fileContent = atob(file_b64);
+			} else {
+				throw new Error("Unsupported file type");
+			}
+      
 			return {
 				content: fileContent,
 				name: file.name,
 				createdDate: file.lastModified,
+				type: file.type
 			};
 		});
 
@@ -91,87 +95,110 @@ const Labs = () => {
 		setIsDragging(false);
 	};
 
+
+	const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (loading) {
+			toast("Please wait for the current upload.");
+			return;
+		}
+  
+		if (e.target.files) {
+			const selectedFiles = Array.from(e.target.files);
+			const allowedFiles = selectedFiles.filter((file) => 
+				file.type === "application/pdf" || 
+        file.type === "text/plain" ||
+        file.type === "text/html" ||
+        file.type === "application/json" ||
+        file.type === "text/csv" ||
+        file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+			);
+  
+			if (allowedFiles.length === 0) {
+				toast("Please select only PDF, TXT, HTML, JSON, CSV or XLSX files.");
+				return;
+			}
+  
+			await uploadFiles(allowedFiles);
+		}
+	};
+  
 	const handleDrop = async (e: any) => {
 		e.preventDefault();
 		e.stopPropagation();
 		setIsDragging(false);
-
+  
 		if (loading) {
-			alert("Please wait for the current upload.");
+			toast("Please wait for the current upload.");
+			return;
 		}
-
+  
 		if (e.dataTransfer.files) {
 			const selectedFiles: any = Array.from(e.dataTransfer.files);
-			if (selectedFiles.length === 0) {
-				alert("Invalid file type.");
+			const allowedFiles = selectedFiles.filter((file: File) => 
+				file.type === "application/pdf" ||
+        file.type === "text/plain" ||
+        file.type === "text/html" ||
+        file.type === "application/json" ||
+        file.type === "text/csv" ||
+        file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+			);
+  
+			if (allowedFiles.length === 0) {
+				toast("Please drop only PDF, TXT, HTML, JSON, CSV or XLSX files.");
 				return;
 			}
-			await uploadFiles(selectedFiles);
-		}
-	};
-
-	const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (loading) {
-			alert("Please wait for the current upload.");
-		}
-
-		if (e.target.files) {
-			const selectedFiles = Array.from(e.target.files);
-			if (selectedFiles.length === 0) {
-				alert("Invalid file type.");
-				return;
-			}
-			await uploadFiles(selectedFiles);
+  
+			await uploadFiles(allowedFiles);
 		}
 	};
 
 	return (
-		<ModuleContainer>
+		<div
+			onDragOver={handleDragOver}
+			onDrop={handleDrop}
+			onDragLeave={handleDragLeave}
+			className="ml-4 bg-transparent flex h-[calc(100vh-64px)]"
+		>
 			<div
-				onDragOver={handleDragOver}
-				onDrop={handleDrop}
-				onDragLeave={handleDragLeave}
-				className={`flex flex-1 w-full ${
+				className={`bg-[#161617] rounded-3xl h-[calc(100vh-64px)] flex flex-1 flex-col items-start p-4 gap-2 overflow-x-hidden ${
 					isDragging ? "opacity-80" : "opacity-100"
 				}`}
 			>
-				<div className="flex flex-col w-full flex-1 overflow-auto pr-1">
-					{!files.length ? (
-						<div className="self-center items-center justify-center flex flex-col flex-1">
-							<LabsEmptyState loading={loading} onFileChange={onFileChange} />
-						</div>
-					) : (
-						<div className="p-8 flex flex-1 flex-col">
-							<div className="font-bold text-2xl text-white mb-8">
-                Your files
+				<div className="flex w-full flex-1 overflow-y-auto overflow-x-hidden pr-1">
+					<div className="flex flex-col w-full flex-1 overflow-auto pr-1">
+						{!files.length ? (
+							<div className="items-center justify-center flex flex-1">
+								<LabsEmptyState loading={loading} onFileChange={onFileChange} />
 							</div>
-							<div className="flex w-full flex-wrap gap-2">
-								{files.map(
-									(
-										file: {
-                      name: string;
-                      content: string;
-                      createdDate: number;
-                    },
-										index
-									) => (
-										<FileTag
-											key={file.name}
-											thisFile={file}
-											handleRemoveFile={() => handleRemoveFile(index)}
-										/>
-									)
-								)}
-								<SkeletonFileTag
-									loading={loading}
-									onFileChange={onFileChange}
-								/>
+						) : (
+							<div className="p-8 flex flex-1 flex-col">
+								<div className="font-bold text-2xl text-white mb-8">
+                  Your files
+								</div>
+								<div className="flex w-full flex-wrap gap-2">
+									{files.map(
+										(
+											file: FileType,
+											index
+										) => (
+											<FileTag
+												key={file.name}
+												thisFile={file}
+												handleRemoveFile={() => handleRemoveFile(index)}
+											/>
+										)
+									)}
+									<SkeletonFileTag
+										loading={loading}
+										onFileChange={onFileChange}
+									/>
+								</div>
 							</div>
-						</div>
-					)}
+						)}
+					</div>
 				</div>
 			</div>
-		</ModuleContainer>
+		</div>
 	);
 };
 

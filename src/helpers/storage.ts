@@ -1,20 +1,11 @@
 import { MessageType } from "./types/message.types";
+import { FileType } from "./types/file.types";
 
-const storeFiles = (
-	files: {
-    name: string;
-    content: string;
-    createdDate: number;
-  }[]
-) => {
+const storeFiles = (files: FileType[]) => {
 	return localStorage.setItem("files", JSON.stringify(files));
 };
-
-const getFiles = (): {
-  name: string;
-  content: string;
-  createdDate: number;
-}[] => {
+  
+const getFiles = (): FileType[] => {
 	try {
 		const files = localStorage.getItem("files");
 		return files ? JSON.parse(files) : [];

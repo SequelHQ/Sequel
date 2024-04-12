@@ -1,20 +1,38 @@
 import { useState } from "react";
 import { ReactComponent as PdfIcon } from "src/assets/images/pdf.svg";
+import { ReactComponent as OtherIcon } from "src/assets/images/docs.svg";
 
 import { ReactComponent as CrossGrayIcon } from "src/assets/icons/cross-gray.svg";
 
 type Props = {
-  thisFile: { name: string; content: string; createdDate: number };
+  thisFile: { name: string; content: string; createdDate: number, type: string };
   handleRemoveFile: () => void;
 };
 
+type SpinnerProps = {
+	color?: string;
+  };
+
 const FileTag = ({ thisFile, handleRemoveFile }: Props) => {
+	const [loading, setLoading] = useState<boolean>(false);
 	const [file] = useState<{
     name: string;
     content: string;
     createdDate: number;
+    type: string;
   }>(thisFile);
 	const [showTrashIcon, setShowTrashIcon] = useState<boolean>(false);
+
+	const Spinner = ({ color = "bg-red-400" }: SpinnerProps) => (
+		<span className={`relative flex h-3 w-3`}>
+			<span
+				className={`animate-ping absolute inline-flex h-full w-full rounded-full ${color} opacity-75`}
+			></span>
+			<span
+				className={`relative inline-flex rounded-full h-3 w-3 ${color}`}
+			></span>
+		</span>
+	);
 
 	return (
 		<div
@@ -25,7 +43,11 @@ const FileTag = ({ thisFile, handleRemoveFile }: Props) => {
 			onMouseEnter={() => setShowTrashIcon(true)}
 			onMouseLeave={() => setShowTrashIcon(false)}
 		>
-			<PdfIcon className={`self-center`} />
+			{file.type === "application/pdf" ? (
+				<PdfIcon className={`self-center`} />
+			) : (
+				<OtherIcon className={`self-center`} />
+			)}
 			<div className={`max-w-full cursor-default`}>
 				<div className="text-start">
 					<div className="text-[#F1F1F1] font-medium truncate text-ellipsis">
@@ -37,13 +59,17 @@ const FileTag = ({ thisFile, handleRemoveFile }: Props) => {
 					{new Date(file?.createdDate)?.toISOString()?.split("T")[0]}
 				</p>
 			</div>
-			{showTrashIcon && (
-				<div className="items-center">
-					<CrossGrayIcon
-						onClick={() => handleRemoveFile()}
-						className="absolute top-0 right-0 mt-3 mr-3 cursor-pointer"
-					/>
-				</div>
+			{loading ? (
+				<Spinner color="bg-red-400" />
+			) : (
+				showTrashIcon && (
+					<div className="items-center">
+						<CrossGrayIcon
+							onClick={() => handleRemoveFile()}
+							className="absolute top-0 right-0 mt-3 mr-3 cursor-pointer"
+						/>
+					</div>
+				)
 			)}
 		</div>
 	);

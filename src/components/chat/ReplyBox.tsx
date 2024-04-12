@@ -100,6 +100,7 @@ const ReplyBox = ({
 
 		const newFiles = await Promise.all(uploadPromises);
 		setFiles?.(files ? [...files, ...newFiles] : [...newFiles]);
+		//@ts-ignore
 		storeFiles(files ? [...files, ...newFiles] : [...newFiles]);
 		setFilesLoading?.(false);
 	};
