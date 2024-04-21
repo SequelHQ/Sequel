@@ -1,142 +1,132 @@
-import { debounce } from "lodash";
-import { MicIcon, PauseIcon } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getJournalData, storeJournalData } from "src/helpers/storage";
-import MicRecorder from "mic-recorder-to-mp3";
-import Spinner from "src/components/spinner";
-import { transcribeAudio } from "src/helpers/transcribe";
-
-const recorder = new MicRecorder({
-	bitRate: 128,
-});
+import SingleNote from "./SingleNote";
 
 const Journal = () => {
-	const [value, setValue] = useState(getJournalData() ?? "");
-	const [isRecording, setIsRecording] = useState(false);
-	const [isSummarizing, setIsSummarizing] = useState(false);
-	const textAreaRef = useRef<HTMLTextAreaElement>(null);
+	const [data, setData] = useState<
+    {
+      text: string;
+      dateCreated: number;
+      dateUpdated: number;
+    }[]
+  >([]);
+	const [lsData, setLsData] = useState(localStorage.getItem(`notesData`));
 
-	const uploadToApi = useCallback(
-		async (file: any) => {
-			setIsSummarizing(true);
-			try {
-				const response = await transcribeAudio(file);
-				if (response && textAreaRef.current) {
-					const isFocused = document.activeElement === textAreaRef.current;
-					let updatedValue = value;
-					if (isFocused) {
-						const { selectionStart, selectionEnd } = textAreaRef.current;
-						updatedValue =
-              value.substring(0, selectionStart) +
-              "\n" +
-              response +
-              "\n\n" +
-              value.substring(selectionEnd, value.length);
-						textAreaRef.current.selectionStart = selectionStart + 1;
-						textAreaRef.current.selectionEnd =
-              selectionStart + 1 + response.length;
-					} else {
-						updatedValue += "\n" + response;
-					}
-					setValue(updatedValue);
-					storeJournalData(updatedValue);
-				}
-			} catch (e) {
-				console.error(e, "Error transcribing");
-			} finally {
-				setIsSummarizing(false);
-			}
-		},
-		[value]
-	);
+	const [journalData, setJournalData] = useState(getJournalData());
 
-	const onStartRecord = async () => {
-		const audio = new Audio("/audios/start.mp3");
-		audio.play();
-		recorder
-			.start()
-			.then(() => {
-				setIsRecording(true);
-			})
-			.catch((e: any) => {
-				console.error(e);
-				setIsRecording(false);
-			});
+	useEffect(() => {
+		if (lsData) {
+			setData(JSON.parse(lsData));
+		}
+	}, [lsData]);
+
+	useEffect(() => {
+		localStorage.setItem(`notesData`, JSON.stringify(data));
+	}, [data]);
+
+	const handleEdit = (index: number, newText: string) => {
+		const updatedData = [...data];
+		updatedData[index].text = newText;
+		updatedData[index].dateUpdated = Date.now();
+		setData(updatedData);
 	};
 
-	const onStopRecord = useCallback(async () => {
-		const audio = new Audio("/audios/start.mp3");
-		audio.play();
-		setIsSummarizing(true);
-		recorder
-			.stop()
-			.getMp3()
-			.then(([buffer, blob]: any) => {
-				const file = new File(buffer, "new-recording.mp3", {
-					type: blob.type,
-				});
-				uploadToApi(file);
-			});
-	}, [uploadToApi]);
-
-	const onRecord = useCallback(
-		(event: any) => {
-			event.preventDefault();
-			if (isRecording) {
-				onStopRecord();
-				setIsRecording(false);
-			} else if (!isRecording) {
-				onStartRecord();
-				setIsRecording(true);
-			}
-			setTimeout(() => {
-				textAreaRef.current?.focus();
-			}, 100);
-		},
-		[isRecording, onStopRecord]
-	);
-
-	const saveInput = useCallback(
-		debounce((nextValue) => {
-			storeJournalData(nextValue);
-		}, 1000),
-		[]
-	);
-
-	const handleChange = (event: any) => {
-		const nextValue = event.target.value;
-		setValue(nextValue);
-		saveInput(nextValue);
+	const handleAddNote = () => {
+		const newNote = {
+			text: "",
+			dateCreated: Date.now(),
+			dateUpdated: Date.now(),
+		};
+		setData([newNote, ...data]);
 	};
+
+
+	function getDateAsName(date: number) {
+		const today = new Date();
+		const yesterday = new Date(today);
+		yesterday.setDate(yesterday.getDate() - 1);
+		const thisWeekStart = new Date(today);
+		thisWeekStart.setDate(thisWeekStart.getDate() - thisWeekStart.getDay());
+
+		if (date >= today.setHours(0, 0, 0, 0)) {
+			return "Today";
+		} else if (date >= yesterday.setHours(0, 0, 0, 0)) {
+			return "Yesterday";
+		} else if (date >= thisWeekStart.setHours(0, 0, 0, 0)) {
+			return "This Week";
+		} else {
+			return "Earlier";
+		}
+
+	}
+
+	const groupNotesByDay = () => {
+		const groups: { [key: string]: typeof data } = {};
+		data.forEach((note) => {
+			const date = new Date(note.dateUpdated);
+			const day = getDateAsName(date.getTime());
+			if (!groups[day]) {
+				groups[day] = [];
+			}
+			groups[day].push(note);
+		});
+		return groups;
+	};
+
+	const noteGroups = groupNotesByDay();
+
+
+	const handleJournalChange = (newJournalData: string) => {
+		setJournalData(newJournalData);
+		storeJournalData(newJournalData);
+	};
+
+
 	return (
-		<div className="ml-4 bg-[#161617] rounded-3xl h-[calc(100vh-64px)] flex flex-1 flex-col items-start px-12 py-8 overflow-x-hidden">
-			<div className="font-bold text-2xl text-white mb-2 pt-4 pb-4">
-        Journal
-			</div>
-			<div className="relative w-full h-full">
-				<textarea
-					ref={textAreaRef}
-					value={value}
-					onChange={handleChange}
-					className="h-full w-full text-white text-base font-light bg-[#161617] rounded-xl border-white border p-4 resize-none outline-none"
-					placeholder="Start typing..."
-				/>
-				{isSummarizing ? (
-					<Spinner className="absolute right-4 bottom-4 h-6 w-6 text-white" />
-				) : !isRecording ? (
-					<MicIcon
-						className="cursor-pointer absolute right-4 bottom-4 h-6 w-6 text-white"
-						onClick={onRecord}
+		<div className="ml-4 bg-[#161617] rounded-3xl h-[calc(100vh-64px)]  items-start px-12 py-8 overflow-x-hidden">
+
+			<div className="w-full">
+		
+				<div className="w-full flex justify-end">
+
+					<button
+						onClick={handleAddNote}
+						className="text-white p-2 border border-solid border-[#7c7c83] rounded-xl cursor-pointer hover:shadow-[0px_3px_16px_rgba(65,58,108,0.25)] hover:scale-[1.006] transition duration-100"
+					>
+						Add Note
+					</button>
+				</div>
+
+				<div className="mt-5 w-full">
+					<SingleNote
+						index={42069}
+						value={journalData}
+						setValue={handleJournalChange}
+						placeholder="This is your main journal. You can include things that you do everyday here instead of making a new note for that everyday. Jot down your thoughts..."
 					/>
-				) : (
-					<PauseIcon
-						className="cursor-pointer absolute right-4 bottom-4 h-6 w-6 text-white"
-						onClick={onRecord}
-					/>
-				)}
+				</div>
+
+				<div className="mt-5 w-full">
+					{Object.entries(noteGroups).map(([day, notes]) => (
+						<div key={day} className="w-4/5 mt-10">
+							<h3 className="text-[#C9C9D5] text-xl font-bold">{day}</h3>
+							{notes.map((note, index) => (
+								<div key={index} className="mt-4">
+									<SingleNote 
+										value={note.text} 
+										setValue={(newText: string) => handleEdit(index, newText)}
+										index={index}
+									/>
+								</div>
+
+							))}
+						</div>
+					))}
+				</div>
 			</div>
 		</div>
 	);
 };
 
 export default Journal;
+
