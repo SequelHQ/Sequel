@@ -63,6 +63,16 @@ const Supplements = () => {
 		]);
 	};
 
+	const handleDosageChange = (id: string, newDosage: string) => {
+		const updatedSupplements = supplements.map((supplement: SupplementType) => {
+			if (supplement.id === id) {
+				return { ...supplement, dosage: newDosage };
+			}
+			return supplement;
+		});
+		setSupplements(updatedSupplements);
+	};
+
 	return (
 		<div className="ml-4 bg-[#161617] rounded-3xl h-[calc(100vh-64px)] flex flex-col items-center justify-center p-8">
 			<div className="flex w-full flex-1 overflow-y-auto overflow-x-hidden pr-1">
@@ -113,7 +123,16 @@ const Supplements = () => {
 											</Tooltip>
 										</TableCell>
 										<TableCell className="max-w-[150px] overflow-hidden whitespace-nowrap truncate">
-											{item.dosage || "N/A"}
+											{editMode ? (
+												<input
+													type="text"
+													value={item.dosage}
+													onChange={(e) => handleDosageChange(item.id, e.target.value)}
+													className="bg-transparent text-white border-none focus:outline-none"
+												/>
+											) : (
+												item.dosage || "N/A"
+											)}
 										</TableCell>
 										<TableCell>
 											<Switch
