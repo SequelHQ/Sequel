@@ -19,10 +19,21 @@ import { XIcon } from "lucide-react";
 import { SupplementsAdd } from "./SupplementsAdd";
 
 const Supplements = () => {
-	const [supplements, setSupplements] = useState(() => {
+	function getSupplements() {
 		const localData = localStorage.getItem("supplementsList");
-		return localData ? JSON.parse(localData) : supplementsList;
-	});
+		if (localData) {
+			const localDataArray = JSON.parse(localData);
+			const supplementsListArray = supplementsList;
+			const newSupplements = supplementsListArray.filter((item: SupplementType) => {
+				return !localDataArray.some((localItem: SupplementType) => item.id === localItem.id);
+			});
+			const updatedSupplementsList = [...newSupplements, ...localDataArray];
+			return updatedSupplementsList;
+		}
+		return supplementsList;
+	}
+
+	const [supplements, setSupplements] = useState(getSupplements());
 	const [editMode, setEditMode] = useState(false);
 
 	useEffect(() => {

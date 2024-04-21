@@ -10,6 +10,78 @@ export interface SupplementType {
 
 export const supplementsList: SupplementType[] = [
 	{
+		"id": "BSO",
+		"supplement": "Blueprint | Snake Oil",
+		"dosage": "1 tbsp",
+		"link": "https://blueprint.bryanjohnson.com/products/the-blueprint-stack",
+		"ordered": false,
+		"inProgress": false,
+		"description": "Extra virgin olive oil which promotes a variety of longevity and cognitive benefits."
+	},
+	{
+		"id": "BNP",
+		"supplement": "Blueprint | Nutty Pudding",
+		"dosage": "2 scoops",
+		"link": "https://blueprint.bryanjohnson.com/products/the-blueprint-stack",
+		"ordered": false,
+		"inProgress": false,
+		"description": "A nutty pudding with 26 g of protein and 300 mg of cocoa flavanols."
+	},
+	{
+		"id": "BNM",
+		"supplement": "Blueprint | Blueberry Nut Mix",
+		"dosage": "1 scoop",
+		"link": "https://blueprint.bryanjohnson.com/products/the-blueprint-stack",
+		"ordered": false,
+		"inProgress": false,
+		"description": "Dried blueberries, macademia, and walnuts."
+	},
+	{
+		"id": "BLOM",
+		"supplement": "Blueprint | Longevity Mix",
+		"dosage": "1 scoop",
+		"link": "https://blueprint.bryanjohnson.com/products/the-blueprint-stack",
+		"ordered": false,
+		"inProgress": false,
+		"description": "Allulose, Monk fruit extract & more to help you live longer."
+	},
+	{
+		"id": "BNGC",
+		"supplement": "Blueprint | NAC Ginger Curcumin",
+		"dosage": "3 capsules",
+		"link": "https://blueprint.bryanjohnson.com/products/the-blueprint-stack",
+		"ordered": false,
+		"inProgress": false,
+		"description": "N-Acetyl-Cysteine, a powerful antioxidant that supports immune function and cognitive health."
+	},
+	{
+		"id": "BRYR",
+		"supplement": "Blueprint | Red Yeast Rice OF Garlic",
+		"dosage": "1 capsule",
+		"link": "https://blueprint.bryanjohnson.com/products/the-blueprint-stack",
+		"ordered": false,
+		"inProgress": false,
+		"description": "Odorless garlic, red yeast rice for arterial and heart health"
+	},
+	{
+		"id": "BEC",
+		"supplement": "Blueprint | Essential Capsules",
+		"dosage": "2 capsules",
+		"link": "https://blueprint.bryanjohnson.com/products/the-blueprint-stack",
+		"ordered": false,
+		"inProgress": false,
+		"description": "HM, pectin, rice hulls & more"
+	},
+	{
+		"id": "BES",
+		"supplement": "Blueprint | Essential Softgels",
+		"dosage": "1 capsule",
+		"link": "https://blueprint.bryanjohnson.com/products/the-blueprint-stack",
+		"ordered": false,
+		"inProgress": false,
+		"description": "Vitamins, lycopene, astaxanthin, lutein & more"
+	},
+	{
 		"id": "ASH",
 		"supplement": "Ashwagandha",
 		"dosage": "600mg",
@@ -530,5 +602,14 @@ export const supplementsList: SupplementType[] = [
 		"ordered": false,
 		"inProgress": false,
 		"description": "Berberine, a plant compound that supports glucose metabolism, cardiovascular health, and weight management."
+	},
+	{
+		"id":"AG1S",
+		"supplement": "AG1",
+		"dosage": "1 Scoop",
+		"link":"https://drinkag1.com",
+		"ordered": false,
+		"inProgress": false,
+		"description": "Combines essential vitamins, minerals, and antioxidants like Alpha Lipoic Acid, CoQ10, and a blend of Calcium for comprehensive daily nutrition and healthy aging."
 	}
 ];
