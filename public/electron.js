@@ -150,7 +150,7 @@ async function authenticateWithWhoop() {
 		}
 
 		if (code) {
-			exchangeCodeForToken(code);
+			exchangeCodeForTokenWhoop(code);
 		} else if (error) {
 			console.error(`OAuth callback error: ${error}`);
 		}
@@ -172,7 +172,7 @@ async function authenticateWithWhoop() {
 	});
 }
 
-async function exchangeCodeForToken(code) {
+async function exchangeCodeForTokenWhoop(code) {
 	const clientId = process.env.REACT_APP_WHOOP_CLIENT_ID;
 	const clientSecret = process.env.REACT_APP_WHOOP_CLIENT_SECRET;
 	const redirectUri = "sequel://app-view?module=whoop";
@@ -200,8 +200,92 @@ async function exchangeCodeForToken(code) {
 	}
 }
 
+
+async function authenticateWithOura() {
+	const clientId = process.env.REACT_APP_OURA_CLIENT_ID;
+	const redirectUri = "sequel://app-view?module=oura";
+	const responseType = "code";
+  
+	const whoopAuthUrl = `https://cloud.ouraring.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&state=oura-configuration`;
+  
+	let authWindow = new BrowserWindow({
+	  width: 800,
+	  height: 600,
+	  webPreferences: {
+		nodeIntegration: false,
+	  },
+	});
+  
+	authWindow.loadURL(whoopAuthUrl);
+	authWindow.show();
+  
+	function handleCallback(url) {
+	  const raw_code = /code=([^&]*)/.exec(url) || null;
+	  const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
+	  const error = /\?error=(.+)$/.exec(url);
+  
+	  if (code || error) {
+		authWindow.destroy();
+	  }
+  
+	  if (code) {
+		exchangeCodeForTokenOura(code);
+	  } else if (error) {
+		console.error(`OAuth callback error: ${error}`);
+	  }
+	}
+  
+	authWindow.webContents.on("will-redirect", (event, url) => {
+	  handleCallback(url);
+	});
+  
+	// For older versions of Electron, use 'will-navigate' event
+	authWindow.webContents.on("will-navigate", (event, url) => {
+	  handleCallback(url);
+	});
+  
+	// Clean up the window
+	authWindow.on("closed", () => {
+	  //@ts-ignore
+	  authWindow = null;
+	});
+  }
+  
+  async function exchangeCodeForTokenOura(code) {
+	const clientId = process.env.REACT_APP_OURA_CLIENT_ID;
+	const clientSecret = process.env.REACT_APP_OURA_CLIENT_SECRET;
+	const redirectUri = "sequel://app-view?module=oura";
+  
+	try {
+	  const response = await axios.post(
+		"https://api.ouraring.com/oauth/token",
+		{
+		  client_id: clientId,
+		  client_secret: clientSecret,
+		  code: code,
+		  redirect_uri: redirectUri,
+		  grant_type: "authorization_code",
+		},
+		{
+		  headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+		  },
+		}
+	  );
+  
+	  mainWindow.webContents.send("data-from-electron-oura", response.data);
+	} catch (error) {
+	  console.error("Error exchanging code for token:", error);
+	}
+  }
+
+  
 ipcMain.on("login-with-whoop", (event, data) => {
 	authenticateWithWhoop();
+});
+
+ipcMain.on("login-with-oura", (event, data) => {
+	authenticateWithOura();
 });
 
 ipcMain.on("close", () => {

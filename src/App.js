@@ -5,6 +5,7 @@ import Labs from "./modules/labs/Labs";
 import AppTitlebar from "./components/AppTitlebar";
 import { useEffect } from "react";
 import Whoop from "./modules/whoop/Whoop";
+import Oura from "./modules/oura/Oura";
 import Settings from "./modules/settings/Settings";
 import Journal from "./modules/journal/Journal";
 import Chat from "./modules/chat/Chat";
@@ -36,6 +37,7 @@ function App() {
 					<Route element={<PageLayout />}>
 						<Route path="/sheets" element={<Labs />} />
 						<Route path="/whoop" element={<Whoop />} />
+						<Route path="/oura" element={<Oura />} />
 						<Route path="/settings" element={<Settings />} />
 						<Route path="/journal" element={<Journal />} />
 						<Route path="/chat" element={<Chat />} />

@@ -7,11 +7,16 @@ contextBridge.exposeInMainWorld("loginWGauth", {
 	send: (channel, data) => {
 		ipcRenderer.send(channel, data);
 	},
-	onDataFromElectron: (callback) => {
+	onDataFromElectronWhoop: (callback) => {
 		ipcRenderer.on("data-from-electron", (event, data) => {
 			callback(data);
 		});
 	},
+	onDataFromElectronOura: (callback) => {
+		ipcRenderer.on("data-from-electron-oura", (event, data) => {
+		  callback(data);
+		});
+	  },
 	minimizeApp: () => {
 		ipcRenderer.send("minimize");
 	},

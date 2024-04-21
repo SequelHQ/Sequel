@@ -113,6 +113,77 @@ const getWhoopRefreshToken = (): string => {
 	}
 };
 
+
+const storeOuraData = (whoopData: string) => {
+	return localStorage.setItem("ouraData", JSON.stringify(whoopData));
+};
+
+const getOuraData = (): string => {
+	try {
+		const data = localStorage.getItem("ouraData");
+		return data ? JSON.parse(data) : "";
+	} catch (e) {
+		console.log(e);
+		return "";
+	}
+};
+
+const storeOuraFetchedDay = (date: Date) => {
+	return localStorage.setItem("ouraFetchedDate", JSON.stringify(date));
+};
+
+const getOuraFetchedDay = (): string => {
+	try {
+		const data = localStorage.getItem("ouraFetchedDate");
+		return data ? JSON.parse(data) : "";
+	} catch (e) {
+		console.log(e);
+		return "";
+	}
+};
+
+const storeOuraDataTypes = (whoopDataType: string[]) => {
+	return localStorage.setItem("ouraDataTypes", JSON.stringify(whoopDataType));
+};
+
+const getOuraDataTypes = (): string[] => {
+	try {
+		const data = localStorage.getItem("ouraDataTypes");
+		return data ? JSON.parse(data) : [];
+	} catch (e) {
+		console.log(e);
+		return [];
+	}
+};
+
+const storeOuraToken = (whoopData: string) => {
+	return localStorage.setItem("ouraToken", JSON.stringify(whoopData));
+};
+
+const getOuraToken = (): string => {
+	try {
+		const data = localStorage.getItem("ouraToken");
+		return data ? JSON.parse(data) : "";
+	} catch (e) {
+		console.log(e);
+		return "";
+	}
+};
+
+const storeOuraRefreshToken = (token: string) => {
+	return localStorage.setItem("ouraRefreshToken", JSON.stringify(token));
+};
+
+const getOuraRefreshToken = (): string => {
+	try {
+		const data = localStorage.getItem("ouraRefreshToken");
+		return data ? JSON.parse(data) : "";
+	} catch (e) {
+		console.log(e);
+		return "";
+	}
+};
+
 const storeJournalData = (journalData: string) => {
 	return localStorage.setItem("journalData", JSON.stringify(journalData));
 };
@@ -187,6 +258,16 @@ export {
 	getWhoopToken,
 	getWhoopDataTypes,
 	storeWhoopDataTypes,
+	storeOuraData,
+	getOuraData,
+	storeOuraDataTypes,
+	getOuraDataTypes,
+	storeOuraFetchedDay,
+	getOuraFetchedDay,
+	storeOuraRefreshToken,
+	getOuraRefreshToken,
+	storeOuraToken,
+	getOuraToken,
 	getAppAssistant,
 	storeAppAssistant,
 	storeThreadId,

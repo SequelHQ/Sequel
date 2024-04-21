@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import DocsIcon from "src/assets/module-icons/supplements.png";
 import WhoopIcon from "src/assets/module-icons/whoop.png";
+import OuraIcon from "src/assets/module-icons/oura.png";
 import JournalIcon from "src/assets/module-icons/notes.png";
 import ChatIcon from "src/assets/module-icons/chat.png";
 import SyncIcon from "src/assets/module-icons/walkthrough.png";
@@ -39,6 +40,13 @@ const MENU = [
 		subtitle: "Track sleep, workouts & more.",
 		path: "/whoop",
 		icon: WhoopIcon,
+	},
+	{
+		title: "Oura",
+		subtitle: "All your Oura data in one place",
+		path: "/oura",
+		icon: OuraIcon,
+		className: "w-14 h-14 mr-2",
 	},
 	{
 		title: "Supplements",
@@ -109,7 +117,7 @@ const Sidebar = () => {
 				<div className="flex items-center justify-end mt-auto">
 					<div className="p-1 rounded-xl w-18 text-gray-700 bg-[#1e1e1e] mb-3 mr-3 text-center text-sm cursor-default">
 						<span id="beta">beta </span>
-						<span id="version_number">v0.0.1</span>
+						<span id="version_number">v0.2.0</span>
 					</div>
 				</div>
 			</div>

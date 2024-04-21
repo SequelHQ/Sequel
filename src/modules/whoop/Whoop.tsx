@@ -57,7 +57,7 @@ const Whoop = () => {
 
 	useEffect(() => {
 		if (loginWGauth) {
-			loginWGauth.onDataFromElectron((data: any) => {
+			loginWGauth.onDataFromElectronWhoop((data: any) => {
 				setWhoopToken(data.access_token);
 				storeWhoopToken(data.access_token);
 				storeWhoopRefreshToken(data.refresh_token);
