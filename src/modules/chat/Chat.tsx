@@ -208,7 +208,7 @@ const Chat = () => {
 			supplements = JSON.parse(
 				localStorage.getItem("supplementsList") ?? ""
 			)?.map((supplement: SupplementType) => {
-				return `${supplement.supplement} - ID: ${supplement.id} - Ordered: ${supplement.ordered} - Dosage ${supplement.dosage}`;
+				return `${supplement.supplement} - ID: ${supplement.id} - Ordered: ${supplement.ordered} - Dosage ${supplement.dosage} - inProgress: ${supplement.inProgress}`;
 			});
 		} catch (e) {
 			console.error(e);

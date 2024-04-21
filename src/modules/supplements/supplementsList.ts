@@ -28,7 +28,7 @@ export const supplementsList: SupplementType[] = [
 		"description": "A nutty pudding with 26 g of protein and 300 mg of cocoa flavanols."
 	},
 	{
-		"id": "BNM",
+		"id": "BNP",
 		"supplement": "Blueprint | Blueberry Nut Mix",
 		"dosage": "1 scoop",
 		"link": "https://blueprint.bryanjohnson.com/products/the-blueprint-stack",
