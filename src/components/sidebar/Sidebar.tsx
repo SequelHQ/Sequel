@@ -9,6 +9,7 @@ import SyncIcon from "src/assets/module-icons/walkthrough.png";
 import SettingsIcon from "src/assets/module-icons/labs.png";
 import LogoIcon from "src/assets/module-icons/tests.png";
 import ScratchPad from "src/assets/module-icons/therapy.png";
+import OrgansIcon from "src/assets/module-icons/organs.png";
 
 const MENU = [
 	{
@@ -16,6 +17,13 @@ const MENU = [
 		subtitle: "Chat with your data",
 		path: "/chat",
 		icon: ChatIcon,
+	},
+	{
+		title: "Organs",
+		subtitle: "Detailed analysis about your organs.",
+		path: "/organs",
+		icon: OrgansIcon,
+		className: "w-14 h-14 mr-2",
 	},
 	{
 		title: "Guides",

@@ -1,5 +1,6 @@
 import { MessageType } from "./types/message.types";
 import { FileType } from "./types/file.types";
+import { ORGANS_DATA, OrgansDataType } from "src/modules/organs/OrgansObj";
 
 const storeFiles = (files: FileType[]) => {
 	return localStorage.setItem("files", JSON.stringify(files));
@@ -195,6 +196,24 @@ const getJournalData = (): string => {
 	} catch (e) {
 		console.log(e);
 		return "";
+	}
+};
+
+export const storeOrgans = (organs: OrgansDataType) => {
+	return localStorage.setItem("organs", JSON.stringify(organs));
+};
+
+export const getOrgans = (): OrgansDataType => {
+	try {
+		const organs = localStorage.getItem("organs");
+		if (organs && organs !== "undefined") {
+			return JSON.parse(organs);
+		} else {
+			return ORGANS_DATA;
+		}
+	} catch (e) {
+		console.log(e);
+		return ORGANS_DATA;
 	}
 };
 
