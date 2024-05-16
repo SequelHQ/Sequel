@@ -9,6 +9,7 @@ import SyncIcon from "src/assets/module-icons/walkthrough.png";
 import SettingsIcon from "src/assets/module-icons/labs.png";
 import LogoIcon from "src/assets/module-icons/tests.png";
 import ScratchPad from "src/assets/module-icons/therapy.png";
+import ConnectIcon from "src/assets/module-icons/connect.png";
 
 const MENU = [
 	{
@@ -16,6 +17,12 @@ const MENU = [
 		subtitle: "Chat with your data",
 		path: "/chat",
 		icon: ChatIcon,
+	},
+	{
+		title: "Insights",
+		subtitle: "Thoughtful insihts about your data",
+		path: "/insights",
+		icon: ConnectIcon,
 	},
 	{
 		title: "Guides",

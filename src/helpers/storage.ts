@@ -198,6 +198,27 @@ const getJournalData = (): string => {
 	}
 };
 
+export const handleStoreInsights =  (content: string, moduleName: string) => {
+	const localData = localStorage.getItem("insights");
+	if (!localData) {
+		localStorage.setItem("insights", JSON.stringify([{ data: content, dateCreated: new Date().toISOString()?.split("T")[0], moduleName }]));
+	} else {
+		const parsed = JSON.parse(localData);
+		parsed?.push({ data: content, dateCreated: new Date().toISOString()?.split("T")[0], moduleName });
+		localStorage.setItem("insights", JSON.stringify(parsed));
+	}
+};
+
+export const getInsightsData = () => {
+	try {
+		const data = localStorage.getItem("insights");
+		return data ? JSON.parse(data)?.reverse() : [];
+	} catch (e) {
+		console.log(e);
+		return [];
+	}
+};
+
 const storeAppAssistant = (assistant: object) => {
 	return localStorage.setItem("Assistant", JSON.stringify(assistant));
 };

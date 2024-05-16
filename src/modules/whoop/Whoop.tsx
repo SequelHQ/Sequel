@@ -16,6 +16,7 @@ import DataMenu from "./DataMenu";
 import { AreaChart, BarChart, Card, LineChart } from "@tremor/react";
 import Spinner from "src/components/spinner";
 import { InnerContainer, OuterContainer } from "src/components/Containers";
+import { makeInsight } from "src/helpers/utils/makeInsight";
 
 const myWindow = window;
 
@@ -209,6 +210,7 @@ const Whoop = () => {
 		}
 		if (!!fetchedData.sleepData && !!fetchedData.workoutData) {
 			storeWhoopData(JSON.stringify(fetchedData));
+			makeInsight("whoop", JSON.stringify(fetchedData))
 		}
 		setFetching(false);
 	}, [getWhoopRequest]);
