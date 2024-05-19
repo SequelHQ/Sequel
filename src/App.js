@@ -14,6 +14,7 @@ import Supplements from "./modules/supplements/Supplements";
 import Therapies from "./modules/therapies/Therapies";
 import Videos from "./modules/videos/Videos";
 import Tests from "./modules/tests/Tests";
+import Organs from "./modules/organs/Organs";
 import Insights from "./modules/insights/Insights";
 
 const initAiConfig = () => {
@@ -46,6 +47,7 @@ function App() {
 						<Route path="/therapies" element={<Therapies />} />
 						<Route path="/videos" element={<Videos />} />
 						<Route path="/tests" element={<Tests />} />
+						<Route path="/organs" element={<Organs />} />
 						<Route path="/insights" element={<Insights />} />
 					</Route>
 				</Routes>

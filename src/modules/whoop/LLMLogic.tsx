@@ -8,6 +8,8 @@ import {
 	getThreadId,
 	storeThreadId,
 	storeAssistantId,
+	getFiles,
+	getJournalData,
 } from "src/helpers/storage";
 
 class EventEmitter extends EventTarget {
@@ -385,7 +387,9 @@ export async function removeExistingThread() {
 	storeAssistantId("");
 }
 
-export async function getInsightsAssestment(moduleName: string, newData: string) {
+
+
+export async function getOrganHealthAssessment() {
 
 	const API_KEY = process.env.REACT_APP_OPENAI_API_KEY
 
@@ -394,6 +398,146 @@ export async function getInsightsAssestment(moduleName: string, newData: string)
 	}
 
 	try {
+
+	
+		let files, journal, organs;
+		try {
+			files = getFiles();
+		} catch (e) {
+			console.error(e);
+		}
+
+		try {
+			journal = getJournalData();
+		} catch (e) {
+			console.error(e);
+		}
+
+		try {
+			organs = getOrgans();
+		} catch (e) {
+			console.error(e);
+		}
+
+
+		const prompt = `
+	
+You are a health assitant GPT. You review files & journals associated with a users health and return the score, & reason, for their internal organs.
+Specifically, you read their labs, & journals, and try to understand what is happening to their internal organs. You are given a list of orgamns that you need to return the status and reason for status for.
+
+You have access to the following data:
+
+
+============= Files: ==============
+${JSON.stringify(files).slice(0, 270_000)}
+
+
+
+============= Journal: =============
+${JSON.stringify(journal).slice(0, 50_000)}
+
+
+============= Existing Organs Data: =============
+${JSON.stringify(organs, null, 2)}
+
+==================================
+
+You will return a JSON in the following format:
+
+type Status: "Unhealthy" | "Moderate" | "Healthy" | "Unsure"
+{
+	"heart" : {
+		"status": Status,
+		"reason": "",
+	},
+	"brain": {
+		"status": Status,
+		"reason": "",
+	},
+	"lung": {
+		"status": Status,
+		"reason": "",
+
+	},
+	"gastrointestinal_tract": {
+		"status": Status,
+		"reason": "",
+	},
+	"joints": {
+		"status": Status,
+		"reason": "",
+
+	},
+	"hair": {
+		"status": Status,
+		"reason": "",
+	},
+	"skin": {
+		"status": Status,
+		"reason": "",
+	},
+	"eye": {
+		"status": Status,
+		"reason": "",
+	},
+	"ear": {
+		"status": Status,
+		"reason": "",
+	},
+	"oral": {
+		"status": Status,
+		"reason": "",
+	}
+}
+
+
+Remoember to return a JSON with all the organs & their status & reason filled it, without FAIL.
+If you believe that there is limited data to gather about for an organ, you can return "Unsure" for that organ; however, this should be very unlikely & it almost impossible that there is no indication of the status & reason for an organ.
+You have to infer the status & reason for an organ, it will obviously never be explicity mentioned. You have to infer it.
+Return the filled in object below:
+`
+
+
+		const response = await fetch("https://api.openai.com/v1/chat/completions", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${API_KEY}`,
+			},
+			body: JSON.stringify({
+				model: "gpt-4-turbo-preview", 
+				messages: [
+					{
+						role: "user",
+						content: prompt
+					}
+				],
+				response_format: {
+					type: "json_object"
+				}
+			}),
+		});
+ 
+		const data = await response.json();
+		const json = data.choices[0].message.content;
+		const jsonObject = JSON.parse(json);
+
+		return jsonObject;
+
+	} catch (err) {
+		console.log(err);
+		return [];
+	}
+}	
+
+
+export async function getInsightsData(moduleName: string, newData: any) {
+	try {
+		const API_KEY = process.env.REACT_APP_OPENAI_API_KEY
+
+	if (!API_KEY) {
+		throw new Error("OpenAI API key is required for this feature.");
+	}
 
 		const prompt = `
 For your next message I want you to follow this strict instruction: 
@@ -410,7 +554,7 @@ Only return the insights, do not return any other text.
 				"Authorization": `Bearer ${API_KEY}`,
 			},
 			body: JSON.stringify({
-				model: "gpt-4o", 
+				model: "gpt-4-turbo-preview", 
 				messages: [
 					{
 						role: "user",
@@ -428,3 +572,4 @@ Only return the insights, do not return any other text.
 		return null;
 	}
 }
+
