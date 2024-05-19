@@ -199,6 +199,7 @@ const getJournalData = (): string => {
 	}
 };
 
+
 export const storeOrgans = (organs: OrgansDataType) => {
 	return localStorage.setItem("organs", JSON.stringify(organs));
 };
@@ -214,6 +215,25 @@ export const getOrgans = (): OrgansDataType => {
 	} catch (e) {
 		console.log(e);
 		return ORGANS_DATA;
+
+export const handleStoreInsights =  (content: string, moduleName: string) => {
+	const localData = localStorage.getItem("insights");
+	if (!localData) {
+		localStorage.setItem("insights", JSON.stringify([{ data: content, dateCreated: new Date().toISOString()?.split("T")[0], moduleName }]));
+	} else {
+		const parsed = JSON.parse(localData);
+		parsed?.push({ data: content, dateCreated: new Date().toISOString()?.split("T")[0], moduleName });
+		localStorage.setItem("insights", JSON.stringify(parsed));
+	}
+};
+
+export const getInsightsData = () => {
+	try {
+		const data = localStorage.getItem("insights");
+		return data ? JSON.parse(data)?.reverse() : [];
+	} catch (e) {
+		console.log(e);
+		return [];
 	}
 };
 

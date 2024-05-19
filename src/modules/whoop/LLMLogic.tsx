@@ -265,22 +265,26 @@ export async function getAnswer(
 			const threadId = await getOrCreateThread(openai);
 
 			try {
-				if (JSON.parse(content)?.whoop) {
+				const parsedContent = JSON.parse(content);
+				if (!parsedContent) {
+					throw new Error('No parsed content');
+				}
+				if (parsedContent.whoop) {
 					await makeWhoopMessages(openai, content, threadId);
 				}
-				if (JSON.parse(content)?.journal) {
+				if (parsedContent.journal) {
 					await makeJournalMessages(openai, content, threadId);
 				}
-				if (JSON.parse(content)?.files) {
+				if (parsedContent.files) {
 					await makeFilesMessages(openai, content, threadId);
 				}
-				if (JSON.parse(content)?.supplements) {
+				if (parsedContent.supplements) {
 					await makeSupplementsMessage(openai, content, threadId);
 				}
-				if (JSON.parse(content)?.tests) {
+				if (parsedContent.tests) {
 					await makeTestsMessage(openai, content, threadId);
 				}
-				if (JSON.parse(content)?.therapies) {
+				if (parsedContent.therapies) {
 					await makeTherapiesMessage(openai, content, threadId);
 				}
 			} catch (e) {
@@ -383,6 +387,8 @@ export async function removeExistingThread() {
 	storeAssistantId("");
 }
 
+
+
 export async function getOrganHealthAssessment() {
 
 	const API_KEY = process.env.REACT_APP_OPENAI_API_KEY
@@ -394,7 +400,7 @@ export async function getOrganHealthAssessment() {
 	try {
 
 	
-		let files, journal;
+		let files, journal, organs;
 		try {
 			files = getFiles();
 		} catch (e) {
@@ -403,6 +409,12 @@ export async function getOrganHealthAssessment() {
 
 		try {
 			journal = getJournalData();
+		} catch (e) {
+			console.error(e);
+		}
+
+		try {
+			organs = getOrgans();
 		} catch (e) {
 			console.error(e);
 		}
@@ -416,12 +428,17 @@ Specifically, you read their labs, & journals, and try to understand what is hap
 You have access to the following data:
 
 
-=============Files:==============
-${JSON.stringify(files).slice(0, 50_000)}
+============= Files: ==============
+${JSON.stringify(files).slice(0, 270_000)}
 
-=============Journal:=============
+
+
+============= Journal: =============
 ${JSON.stringify(journal).slice(0, 50_000)}
 
+
+============= Existing Organs Data: =============
+${JSON.stringify(organs, null, 2)}
 
 ==================================
 
@@ -488,7 +505,7 @@ Return the filled in object below:
 				"Authorization": `Bearer ${API_KEY}`,
 			},
 			body: JSON.stringify({
-				model: "gpt-4o", 
+				model: "gpt-4-turbo-preview", 
 				messages: [
 					{
 						role: "user",
@@ -511,4 +528,48 @@ Return the filled in object below:
 		console.log(err);
 		return [];
 	}
+}	
+
+
+export async function getInsightsData(moduleName: string, newData: any) {
+	try {
+		const API_KEY = process.env.REACT_APP_OPENAI_API_KEY
+
+	if (!API_KEY) {
+		throw new Error("OpenAI API key is required for this feature.");
+	}
+
+		const prompt = `
+For your next message I want you to follow this strict instruction: 
+Use the data available about ${moduleName} and provide me a few insights about it, return only the insights WITHOUT any other comments"
+
+Data: ${newData}
+
+Only return the insights, do not return any other text.
+`
+		const response = await fetch("https://api.openai.com/v1/chat/completions", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${API_KEY}`,
+			},
+			body: JSON.stringify({
+				model: "gpt-4-turbo-preview", 
+				messages: [
+					{
+						role: "user",
+						content: prompt
+					}
+				],
+			}),
+		});
+
+		const data = await response.json();
+		const json = data.choices[0].message.content;
+		return json
+	} catch (err) {
+		console.log(err);
+		return null;
+	}
 }
+

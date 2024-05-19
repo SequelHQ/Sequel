@@ -9,6 +9,8 @@ import { SkeletonFileTag } from "src/components/SkeletonFileTag";
 import toast from "react-hot-toast";
 import { FileType } from "src/helpers/types/file.types";
 import { makeOrgans } from "src/helpers/utils/makeOrgans";
+import { makeInsight } from "src/helpers/utils/makeInsight";
+
 PDFJS.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const extractTextFromPDFBase64 = async (base64String: string) => {
@@ -64,6 +66,7 @@ const Labs = () => {
 		setFiles?.(files ? [...files, ...newFiles] : [...newFiles]);
 		storeFiles(files ? [...files, ...newFiles] : [...newFiles]);
 		makeOrgans()
+		makeInsight("files", JSON.stringify([...newFiles]))
 		setLoading(false);
 	};
 
