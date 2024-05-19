@@ -15,6 +15,7 @@ import axios from "axios";
 import DataMenu from "./DataMenu";
 import { AreaChart, BarChart, Card } from "@tremor/react";
 import Spinner from "src/components/spinner";
+import { makeInsight } from "src/helpers/utils/makeInsight";
 
 const myWindow = window;
 const CHART_SIZE = 90;
@@ -249,6 +250,7 @@ const Oura = () => {
 		}
 		if (!!fetchedData.sleepData && !!fetchedData.workoutData) {
 			storeOuraData(JSON.stringify(fetchedData));
+			makeInsight("oura", JSON.stringify(fetchedData))
 		}
 		setFetching(false);
 	}, [getOuraRequest]);

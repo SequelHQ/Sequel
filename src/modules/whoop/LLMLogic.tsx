@@ -263,22 +263,26 @@ export async function getAnswer(
 			const threadId = await getOrCreateThread(openai);
 
 			try {
-				if (JSON.parse(content)?.whoop) {
+				const parsedContent = JSON.parse(content);
+				if (!parsedContent) {
+					throw new Error('No parsed content');
+				}
+				if (parsedContent.whoop) {
 					await makeWhoopMessages(openai, content, threadId);
 				}
-				if (JSON.parse(content)?.journal) {
+				if (parsedContent.journal) {
 					await makeJournalMessages(openai, content, threadId);
 				}
-				if (JSON.parse(content)?.files) {
+				if (parsedContent.files) {
 					await makeFilesMessages(openai, content, threadId);
 				}
-				if (JSON.parse(content)?.supplements) {
+				if (parsedContent.supplements) {
 					await makeSupplementsMessage(openai, content, threadId);
 				}
-				if (JSON.parse(content)?.tests) {
+				if (parsedContent.tests) {
 					await makeTestsMessage(openai, content, threadId);
 				}
-				if (JSON.parse(content)?.therapies) {
+				if (parsedContent.therapies) {
 					await makeTherapiesMessage(openai, content, threadId);
 				}
 			} catch (e) {
@@ -379,4 +383,48 @@ export async function getAnswer(
 export async function removeExistingThread() {
 	storeThreadId("");
 	storeAssistantId("");
+}
+
+export async function getInsightsAssestment(moduleName: string, newData: string) {
+
+	const API_KEY = process.env.REACT_APP_OPENAI_API_KEY
+
+	if (!API_KEY) {
+		throw new Error("OpenAI API key is required for this feature.");
+	}
+
+	try {
+
+		const prompt = `
+For your next message I want you to follow this strict instruction: 
+Use the data available about ${moduleName} and provide me a few insights about it, return only the insights WITHOUT any other comments"
+
+Data: ${newData}
+
+Only return the insights, do not return any other text.
+`
+		const response = await fetch("https://api.openai.com/v1/chat/completions", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${API_KEY}`,
+			},
+			body: JSON.stringify({
+				model: "gpt-4o", 
+				messages: [
+					{
+						role: "user",
+						content: prompt
+					}
+				],
+			}),
+		});
+
+		const data = await response.json();
+		const json = data.choices[0].message.content;
+		return json
+	} catch (err) {
+		console.log(err);
+		return null;
+	}
 }

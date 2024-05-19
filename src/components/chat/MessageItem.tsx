@@ -31,7 +31,7 @@ function removeAllMathElements(htmlString: string) {
 	return newHtmlString;
 }
 
-function convertLatexInMarkdown(markdown: string) {
+export function convertLatexInMarkdown(markdown: string) {
 	const regex = /\\\[([\s\S]*?)\\\]|\\\((.*?)\\\)/g;
 	return markdown.replace(regex, (match, displayLatex, inlineLatex) => {
 		let latex = displayLatex || inlineLatex;
