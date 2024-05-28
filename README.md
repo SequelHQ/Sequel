@@ -12,6 +12,8 @@ To embark on your journey with Sequel, clone our project repository from GitHub 
 
 - Node.js (LTS Version recommended)
 - npm (Node Package Manager)
+- [brew](https://brew.sh/) (MacOS Package manager)
+- [bun](https://bun.sh/docs/installation) (JS/TS Toolkit)
 
 ### Installation
 
@@ -34,6 +36,7 @@ cd sequel
 
 4. Install the project dependencies:
 ```sh
+brew install pixman
 bun install
 ```
 
